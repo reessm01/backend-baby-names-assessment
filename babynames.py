@@ -45,7 +45,8 @@ def write_summary(filename, extracted_names):
 
 def print_result(extracted_names):
     print('******************')
-    for item in extracted_names: print(item) 
+    for item in extracted_names: 
+        print(item) 
 
 def extract_names(filename):
     """
@@ -55,6 +56,7 @@ def extract_names(filename):
     """
 
     result = []
+    names = []
 
     with open(filename, 'r') as f:
         patts = [r'Popularity\sin\s(\d\d\d\d)', r'<td>(\d+)</td><td>(\w+)</td><td>(\w+)</td>']
@@ -64,11 +66,12 @@ def extract_names(filename):
             for pat in patts:
                 match = re.search(pat, line)
                 if match and pat == patts[1]:
-                    result.append(match.group(2) + " " + match.group(1))
+                    names.append(match.group(2) + " " + match.group(1))
                 elif match and pat == patts[0]:
                     result.append("Year " + match.group(1))
             line = f.readline()
-    return result
+    names.sort()
+    return result + names
 
 
 def create_parser():
