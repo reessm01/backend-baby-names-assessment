@@ -66,6 +66,7 @@ def extract_names(filename):
                 match = re.search(pat, line)
                 if match and pat == patts[1]:
                     names.append(match.group(2) + " " + match.group(1))
+                    names.append(match.group(3) + " " + match.group(1))
                 elif match and pat == patts[0]:
                     result.append("Year " + match.group(1))
             line = f.readline()
