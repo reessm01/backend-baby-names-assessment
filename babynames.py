@@ -38,6 +38,14 @@ Suggested milestones for incremental development:
  -Fix main() to use the extract_names list
 """
 
+def write_summary(filename, extracted_names):
+    with open(filename + '.summary', 'w+') as f:
+        for item in extracted_names: f.write(item + '\n') 
+
+def print_result(extracted_names):
+    print('******************')
+    for item in extracted_names: 
+        print(item) 
 
 def extract_names(filename):
     """
@@ -45,8 +53,25 @@ def extract_names(filename):
     followed by the name-rank strings in alphabetical order.
     ['2006', 'Aaliyah 91', Aaron 57', 'Abagail 895', ' ...]
     """
-    # +++your code here+++
-    return
+
+    result = []
+    names = []
+
+    with open(filename, 'r') as f:
+        patts = [r'Popularity\sin\s(\d\d\d\d)', r'<td>(\d+)</td><td>(\w+)</td><td>(\w+)</td>']
+        line = f.readline()
+
+        while line:
+            for pat in patts:
+                match = re.search(pat, line)
+                if match and pat == patts[1]:
+                    names.append(match.group(2) + " " + match.group(1))
+                    names.append(match.group(3) + " " + match.group(1))
+                elif match and pat == patts[0]:
+                    result.append("Year " + match.group(1))
+            line = f.readline()
+    names.sort()
+    return result + names
 
 
 def create_parser():
@@ -72,11 +97,17 @@ def main():
 
     # option flag
     create_summary = args.summaryfile
-
+    
     # +++your code here+++
     # For each filename, get the names, then either print the text output
     # or write it to a summary file
-
+    for file in file_list:
+        if str(file)[-4:] == 'html':
+            extracted_names = extract_names(file)
+            if create_summary:
+                write_summary(file, extracted_names)
+            else: 
+                print_result(extracted_names)
 
 if __name__ == '__main__':
     main()
